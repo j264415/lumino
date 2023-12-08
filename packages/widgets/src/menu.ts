@@ -1221,7 +1221,14 @@ export namespace Menu {
      */
     renderShortcut(data: IRenderData): VirtualElement {
       let content = this.formatShortcut(data);
-      return h.div({ className: 'lm-Menu-itemShortcut' }, content);
+      let speechContent = this.formatShortcutText(data);
+      return h.div(
+        {
+          className: 'lm-Menu-itemShortcut',
+          'aria-label': `${speechContent}`
+        },
+        content
+      );
     }
 
     /**
@@ -1370,6 +1377,14 @@ export namespace Menu {
     formatShortcut(data: IRenderData): h.Child {
       let kb = data.item.keyBinding;
       return kb ? CommandRegistry.formatKeystroke(kb.keys) : null;
+    }
+
+    formatShortcutText(data: IRenderData): h.Child {
+      let kbText = data.item.keyBinding;
+      if (kbText?.keys.includes('Ctrl Shift ]')) {
+        return 'Ctrl+Shift+closing bracket';
+      }
+      return kbText ? CommandRegistry.formatKeystroke(kbText.keys) : null;
     }
   }
 
